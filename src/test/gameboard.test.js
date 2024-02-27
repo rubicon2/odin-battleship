@@ -1,4 +1,3 @@
-const { experiments } = require('webpack');
 const Gameboard = require('../modules/gameboard');
 const Ship = require('../modules/ship');
 
