@@ -6,6 +6,11 @@ describe('ship', () => {
     expect(ship.length).toBe(3);
   });
 
+  test('ship orientation', () => {
+    const ship = new Ship('Name', 3);
+    expect(ship.isVertical).toBe(true);
+  });
+
   test('times hit', () => {
     const ship = new Ship('Name', 3);
     expect(ship.hitCount).toBe(0);
