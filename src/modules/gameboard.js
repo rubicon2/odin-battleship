@@ -81,8 +81,13 @@ class Gameboard {
     return this.#boardCells[x][y];
   }
 
+  checkSpaceAttacked(x, y) {
+    if (this.#receivedAttacks[x][y] !== null) return true;
+    return false;
+  }
+
   receiveAttack(x, y) {
-    if (this.#receivedAttacks[x][y]) {
+    if (this.checkSpaceAttacked(x, y)) {
       // Already attacked that spot, skip
       return;
     }
