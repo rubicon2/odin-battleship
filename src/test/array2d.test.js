@@ -32,4 +32,11 @@ describe('array2D', () => {
       [null, null, null, null, null, null, null, null, null, null],
     ]);
   });
+
+  test('array access', () => {
+    const arr = array2D(10, 'blob');
+    expect(arr[0][0]).toBeDefined();
+    expect(arr[9][9]).toBeDefined();
+    expect(arr[9][10]).toBeUndefined();
+  });
 });
