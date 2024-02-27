@@ -137,16 +137,19 @@ describe('gameboard', () => {
   });
 
   describe('receive attack', () => {
-    test('attack hits', () => {
-      const ship = new Ship('Some Ship', 3);
+    let ship;
+
+    beforeEach(() => {
+      ship = new Ship('Some Ship', 3);
       gameboard.place(ship, 0, 0);
+    });
+
+    test('attack hits', () => {
       gameboard.receiveAttack(0, 0);
       expect(ship.hitCount).toBe(1);
     });
 
     test('attack hits same spot twice, this should not count as two hits', () => {
-      const ship = new Ship('Some Ship', 3);
-      gameboard.place(ship, 0, 0);
       gameboard.receiveAttack(0, 0);
       gameboard.receiveAttack(0, 0);
       expect(ship.hitCount).toBe(1);
