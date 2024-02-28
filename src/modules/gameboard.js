@@ -5,7 +5,7 @@ class Gameboard {
   // I.e. so a ship of length 3 will take up 3 cells, all containing a ref to the ship
   #boardCells = null;
 
-  #receivedAttacks = null;
+  #receivedAttackCells = null;
 
   // Keep refs to each ship as they are placed, so can easily update their state
   #ships = [];
@@ -13,12 +13,12 @@ class Gameboard {
   constructor(boardSize = 10) {
     this.boardSize = boardSize;
     this.#boardCells = array2D(boardSize);
-    this.#receivedAttacks = array2D(boardSize);
+    this.#receivedAttackCells = array2D(boardSize);
   }
 
   reset() {
     this.#boardCells = array2D(this.boardSize);
-    this.#receivedAttacks = array2D(this.boardSize);
+    this.#receivedAttackCells = array2D(this.boardSize);
     this.#ships = [];
   }
 
@@ -82,7 +82,7 @@ class Gameboard {
   }
 
   checkSpaceAttacked(x, y) {
-    if (this.#receivedAttacks[x][y] !== null) return true;
+    if (this.#receivedAttackCells[x][y] !== null) return true;
     return false;
   }
 
@@ -94,9 +94,9 @@ class Gameboard {
     const ship = this.#boardCells[x][y];
     if (ship) {
       ship.hit();
-      this.#receivedAttacks[x][y] = true;
+      this.#receivedAttackCells[x][y] = true;
     } else {
-      this.#receivedAttacks[x][y] = false;
+      this.#receivedAttackCells[x][y] = false;
     }
   }
 
