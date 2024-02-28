@@ -30,6 +30,14 @@ class Gameboard {
     return this.boardSize - 1;
   }
 
+  get receivedAttacks() {
+    return this.#receivedAttackCells.flat().filter((cell) => cell !== null);
+  }
+
+  anySpacesLeftToAttack() {
+    return this.receivedAttacks.length < this.boardSize ** 2;
+  }
+
   checkPositionValid(x, y) {
     return (
       x >= this.minBoardPosition &&

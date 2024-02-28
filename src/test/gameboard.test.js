@@ -32,6 +32,19 @@ describe('gameboard', () => {
     expect(gameboard.checkSpaceAvailable(ship, 0, 0)).toBe(true);
   });
 
+  test('check correctly if all positions have been attacked', () => {
+    const smallBoard = new Gameboard(2);
+    expect(smallBoard.anySpacesLeftToAttack()).toBe(true);
+    smallBoard.receiveAttack(0, 0);
+    expect(smallBoard.anySpacesLeftToAttack()).toBe(true);
+    smallBoard.receiveAttack(1, 0);
+    expect(smallBoard.anySpacesLeftToAttack()).toBe(true);
+    smallBoard.receiveAttack(0, 1);
+    expect(smallBoard.anySpacesLeftToAttack()).toBe(true);
+    smallBoard.receiveAttack(1, 1);
+    expect(smallBoard.anySpacesLeftToAttack()).toBe(false);
+  });
+
   test('detects whether ships are all sunk', () => {
     const shipA = new Ship('Ship the First', 3);
     gameboard.place(shipA, 0, 0);
