@@ -108,6 +108,10 @@ class Gameboard {
     }
   }
 
+  shipCount() {
+    return this.#ships.length;
+  }
+
   areShipsAllSunk() {
     // eslint-disable-next-line no-restricted-syntax
     for (const ship of this.#ships) if (!ship.isSunk()) return false;
