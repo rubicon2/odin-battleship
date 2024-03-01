@@ -1,0 +1,20 @@
+.gameboardCell {
+  border: 1px solid rgb(71, 148, 184);
+}
+
+/* Remove blue borders around edge of gameboard */
+.gameboardCell:nth-child(10n - 9) {
+  border-left: none;
+}
+
+.gameboardCell:nth-child(10n) {
+  border-right: none;
+}
+
+.gameboardCell:nth-child(n + 91) {
+  border-bottom: none;
+}
+
+.gameboardCell:nth-child(-n + 10) {
+  border-top: none;
+}
