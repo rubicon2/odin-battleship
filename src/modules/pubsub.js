@@ -16,7 +16,6 @@ function unsubscribe(tag, fnToRemove) {
 
 function publish(tag, ...data) {
   // In a try catch block, since the user could provide any kind of arguments to be passed onto the
-  // subscribed functions - which may not match the function's expected parameters
   try {
     if (events[tag]) {
       events[tag].forEach((fn) => {
