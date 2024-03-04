@@ -1,5 +1,6 @@
 import createGameboard, {
   updateGameboard,
+  revealShips,
 } from './modules/dom/gameboard/gameboardDom';
 import './style.css';
 
@@ -49,6 +50,7 @@ document.body.appendChild(wrapper);
 
 const playerGameboardDOM = createGameboard(playerGameboard);
 wrapper.appendChild(playerGameboardDOM);
+revealShips(playerGameboard, playerGameboardDOM);
 
 const enemyGameboardDOM = createGameboard(enemyGameboard);
 wrapper.appendChild(enemyGameboardDOM);

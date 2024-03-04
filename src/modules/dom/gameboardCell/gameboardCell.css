@@ -2,6 +2,10 @@
   border: 1px solid rgb(71, 148, 184);
 }
 
+.ship {
+  background-color: black;
+}
+
 .hit {
   background-color: red;
 }
