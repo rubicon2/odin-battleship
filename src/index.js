@@ -76,9 +76,21 @@ Pubsub.subscribe('onCellClick', (gameboardDOM, x, y) => {
   }
 });
 
+function checkWon() {
+  if (playerGameboard.areShipsAllSunk()) {
+    alert('Skynet wins!');
+  } else if (enemyGameboard.areShipsAllSunk()) {
+    alert('You win!');
+  } else {
+    console.log(`${enemyGameboard.shipsLeft()} ships left to sink...`);
+  }
+}
+
 Pubsub.subscribe('onBoardChange', (gameboard) => {
-  if (gameboard === playerGameboard)
+  if (gameboard === playerGameboard) {
     updateGameboard(gameboard, playerGameboardDOM);
-  if (gameboard === enemyGameboard)
+  } else if (gameboard === enemyGameboard) {
     updateGameboard(gameboard, enemyGameboardDOM);
+  }
+  checkWon();
 });
