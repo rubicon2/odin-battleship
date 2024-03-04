@@ -58,7 +58,7 @@ class Gameboard {
   }
 
   checkSpaceAvailable(ship, x, y) {
-    if (ship.isVertical) {
+    if (ship.isHorizontal) {
       for (let currentY = y; currentY < y + ship.length; currentY += 1) {
         if (
           this.#boardCells[x][currentY] ||
@@ -80,7 +80,7 @@ class Gameboard {
 
   place(ship, x, y) {
     if (this.checkSpaceAvailable(ship, x, y)) {
-      if (ship.isVertical) {
+      if (ship.isHorizontal) {
         for (let currentY = y; currentY < y + ship.length; currentY += 1) {
           this.#boardCells[x][currentY] = ship;
         }
