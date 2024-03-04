@@ -114,10 +114,8 @@ class Gameboard {
     if (ship) {
       ship.hit();
       this.#receivedAttackCells[x][y] = true;
-      Pubsub.publish('onAttackHit', this, x, y);
     } else {
       this.#receivedAttackCells[x][y] = false;
-      Pubsub.publish('onAttackMiss', this, x, y);
     }
     Pubsub.publish('onBoardChange', this);
   }
