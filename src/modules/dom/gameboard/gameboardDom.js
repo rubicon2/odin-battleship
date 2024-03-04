@@ -28,6 +28,7 @@ export function updateGameboard(gameboard, gameboardElement) {
     cell.remove();
   });
 
+function createGameboardCells(gameboard, gameboardElement) {
   const gameboardSize = gameboard.boardSize;
   for (let x = 0; x < gameboardSize; x += 1) {
     for (let y = 0; y < gameboardSize; y += 1) {
@@ -48,24 +49,11 @@ export function updateGameboard(gameboard, gameboardElement) {
 
 export default function createGameboard(gameboard) {
   const gameboardElement = document.createElement('div');
-  const gameboardSize = gameboard.boardSize;
   gameboardElement.classList.add('gameboard');
-
-  for (let x = 0; x < gameboardSize; x += 1) {
-    for (let y = 0; y < gameboardSize; y += 1) {
-      const cell = createGameboardCell();
-      cell.setAttribute('data-x', x);
-      cell.setAttribute('data-y', y);
-      cell.addEventListener('click', () => {
-        Pubsub.publish('onCellClick', gameboardElement, x, y);
-      });
-      gameboardElement.appendChild(cell);
-    }
-  }
-
   // Pubsub.subscribe('onBoardChange', updateBoard);
 
   const addHitBound = addHit.bind(gameboardElement);
   const addMissBound = addMiss.bind(gameboardElement);
   return { gameboardElement, addHit: addHitBound, addMiss: addMissBound };
+  createGameboardCells(gameboard, gameboardElement);
 }
