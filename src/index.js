@@ -1,7 +1,4 @@
 import createGameboard, {
-  updateBoard,
-  addHit,
-  addMiss,
   updateGameboard,
 } from './modules/dom/gameboard/gameboardDom';
 import './style.css';
@@ -51,10 +48,10 @@ wrapper.classList.add('wrapper');
 document.body.appendChild(wrapper);
 
 const playerGameboardDOM = createGameboard(playerGameboard);
-wrapper.appendChild(playerGameboardDOM.gameboardElement);
+wrapper.appendChild(playerGameboardDOM);
 
 const enemyGameboardDOM = createGameboard(enemyGameboard);
-wrapper.appendChild(enemyGameboardDOM.gameboardElement);
+wrapper.appendChild(enemyGameboardDOM);
 
 function enemyAttackPlayer() {
   setTimeout(
@@ -69,26 +66,16 @@ function enemyAttackPlayer() {
 
 // All this binding stuff is terrible...
 Pubsub.subscribe('onCellClick', (gameboardDOM, x, y) => {
-  if (canAttack && gameboardDOM === enemyGameboardDOM.gameboardElement) {
+  if (canAttack && gameboardDOM === enemyGameboardDOM) {
     canAttack = false;
     player.attack(enemyGameboard, x, y);
-    // enemyGameboard.receiveAttack(x, y);
     enemyAttackPlayer();
   }
 });
 
-Pubsub.subscribe('onAttackHit', (gameboard, x, y) => {
-  if (gameboard === playerGameboard) playerGameboardDOM.addHit(x, y);
-  else if (gameboard === enemyGameboard) enemyGameboardDOM.addHit(x, y);
-});
-Pubsub.subscribe('onAttackMiss', (gameboard, x, y) => {
-  if (gameboard === playerGameboard) playerGameboardDOM.addMiss(x, y);
-  else if (gameboard === enemyGameboard) enemyGameboardDOM.addMiss(x, y);
-});
-
 Pubsub.subscribe('onBoardChange', (gameboard) => {
   if (gameboard === playerGameboard)
-    updateGameboard(gameboard, playerGameboardDOM.gameboardElement);
+    updateGameboard(gameboard, playerGameboardDOM);
   if (gameboard === enemyGameboard)
-    updateGameboard(gameboard, enemyGameboardDOM.gameboardElement);
+    updateGameboard(gameboard, enemyGameboardDOM);
 });
