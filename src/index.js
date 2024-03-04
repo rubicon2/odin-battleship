@@ -60,6 +60,7 @@ function enemyAttackPlayer() {
     () => {
       const attackPlayer = enemy.attack.bind(enemy);
       attackPlayer(playerGameboard);
+      revealShips(playerGameboard, playerGameboardDOM);
       canAttack = true;
     },
     rangedRandomInt(400, 1000),
