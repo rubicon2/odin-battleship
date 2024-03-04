@@ -15,8 +15,10 @@ body {
 }
 
 .wrapper {
-  width: 80vw;
+  width: 100vw;
+  min-height: 100vh;
   margin: 0 auto;
   display: grid;
-  justify-content: center;
+  place-items: center;
+  grid-template-columns: 1fr 1fr;
 }
