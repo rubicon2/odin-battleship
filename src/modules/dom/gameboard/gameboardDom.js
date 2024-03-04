@@ -1,19 +1,71 @@
 import './gameboard.css';
 
 import createGameboardCell from '../gameboardCell/gameboardCellDom';
+import Pubsub from '../../pubsub';
 
-export default function createGameboard(gameboardSize) {
-  const gameboard = document.createElement('div');
-  gameboard.classList.add('gameboard');
+export function updateBoard(gameboard) {}
+
+export function addHit(x, y) {
+  // The "this" stuff in here is awful.
+  // But need to know which DOM gameboard to update,
+  // And also need information from the gameboard game object...
+  const cell = this.querySelector(
+    `.gameboardCell[data-x="${x}"][data-y="${y}"]`,
+  );
+  cell.classList.add('hit');
+}
+
+export function addMiss(x, y) {
+  const cell = this.querySelector(
+    `.gameboardCell[data-x="${x}"][data-y="${y}"]`,
+  );
+  cell.classList.add('miss');
+}
+
+export function updateGameboard(gameboard, gameboardElement) {
+  const allCells = gameboardElement.querySelectorAll('.gameboardCell');
+  allCells.forEach((cell) => {
+    cell.remove();
+  });
+
+  const gameboardSize = gameboard.boardSize;
+  for (let x = 0; x < gameboardSize; x += 1) {
+    for (let y = 0; y < gameboardSize; y += 1) {
+      const cell = createGameboardCell();
+      if (gameboard.receivedAttackCells[x][y] === true)
+        cell.classList.add('hit');
+      else if (gameboard.receivedAttackCells[x][y] === false)
+        cell.classList.add('miss');
+      cell.setAttribute('data-x', x);
+      cell.setAttribute('data-y', y);
+      cell.addEventListener('click', () => {
+        Pubsub.publish('onCellClick', gameboardElement, x, y);
+      });
+      gameboardElement.appendChild(cell);
+    }
+  }
+}
+
+export default function createGameboard(gameboard) {
+  const gameboardElement = document.createElement('div');
+  const gameboardSize = gameboard.boardSize;
+  gameboardElement.classList.add('gameboard');
 
   for (let x = 0; x < gameboardSize; x += 1) {
     for (let y = 0; y < gameboardSize; y += 1) {
       const cell = createGameboardCell();
       cell.setAttribute('data-x', x);
       cell.setAttribute('data-y', y);
-      gameboard.appendChild(cell);
+      cell.addEventListener('click', () => {
+        Pubsub.publish('onCellClick', gameboardElement, x, y);
+      });
+      gameboardElement.appendChild(cell);
     }
   }
 
-  return gameboard;
+  // Pubsub.subscribe('onBoardChange', updateBoard);
+
+  const addHitBound = addHit.bind(gameboardElement);
+  const addMissBound = addMiss.bind(gameboardElement);
+  return { gameboardElement, addHit: addHitBound, addMiss: addMissBound };
 }
