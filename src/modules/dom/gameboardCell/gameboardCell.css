@@ -2,6 +2,14 @@
   border: 1px solid rgb(71, 148, 184);
 }
 
+.hit {
+  background-color: red;
+}
+
+.miss {
+  background-color: white;
+}
+
 /* Remove blue borders around edge of gameboard */
 .gameboardCell:nth-child(10n - 9) {
   border-left: none;
