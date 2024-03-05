@@ -8,7 +8,7 @@ describe('ship', () => {
 
   test('ship orientation', () => {
     const ship = new Ship('Name', 3);
-    expect(ship.isVertical).toBe(true);
+    expect(ship.isHorizontal).toBe(true);
   });
 
   test('times hit', () => {

@@ -1,4 +1,5 @@
 const array2D = require('./array2d');
+const Pubsub = require('./pubsub');
 
 class Gameboard {
   // Stores locations of all ships
@@ -20,6 +21,7 @@ class Gameboard {
     this.#boardCells = array2D(this.boardSize);
     this.#receivedAttackCells = array2D(this.boardSize);
     this.#ships = [];
+    Pubsub.publish('onBoardChange', this);
   }
 
   get minBoardPosition() {
@@ -28,6 +30,14 @@ class Gameboard {
 
   get maxBoardPosition() {
     return this.boardSize - 1;
+  }
+
+  get boardCells() {
+    return this.#boardCells;
+  }
+
+  get receivedAttackCells() {
+    return this.#receivedAttackCells;
   }
 
   get receivedAttacks() {
@@ -48,7 +58,7 @@ class Gameboard {
   }
 
   checkSpaceAvailable(ship, x, y) {
-    if (ship.isVertical) {
+    if (ship.isHorizontal) {
       for (let currentY = y; currentY < y + ship.length; currentY += 1) {
         if (
           this.#boardCells[x][currentY] ||
@@ -70,7 +80,7 @@ class Gameboard {
 
   place(ship, x, y) {
     if (this.checkSpaceAvailable(ship, x, y)) {
-      if (ship.isVertical) {
+      if (ship.isHorizontal) {
         for (let currentY = y; currentY < y + ship.length; currentY += 1) {
           this.#boardCells[x][currentY] = ship;
         }
@@ -80,6 +90,7 @@ class Gameboard {
         }
       }
       this.#ships.push(ship);
+      Pubsub.publish('onBoardChange', this);
     } else {
       throw new Error(`Space is not available! x: ${x}, y: ${y}`);
     }
@@ -106,10 +117,18 @@ class Gameboard {
     } else {
       this.#receivedAttackCells[x][y] = false;
     }
+    Pubsub.publish('onBoardChange', this);
   }
 
   shipCount() {
     return this.#ships.length;
+  }
+
+  shipsLeft() {
+    return this.#ships.reduce(
+      (count, ship) => count + parseInt(ship.isSunk() ? 0 : 1, 10),
+      0,
+    );
   }
 
   areShipsAllSunk() {

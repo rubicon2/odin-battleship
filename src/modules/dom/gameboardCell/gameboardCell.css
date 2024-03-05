@@ -1,0 +1,42 @@
+.gameboardCell:not(.ship) {
+  border: 1px solid rgb(71, 148, 184);
+}
+
+.ship {
+  background-color: black;
+}
+
+.horizontal-ship {
+  border-top: 5px solid grey;
+  border-bottom: 5px solid grey;
+}
+
+.vertical-ship {
+  border-left: 5px solid grey;
+  border-right: 5px solid grey;
+}
+
+.hit {
+  background-color: red;
+}
+
+.miss {
+  background-color: white;
+}
+
+/* Remove blue borders around edge of gameboard */
+.gameboardCell:not(.ship):nth-child(10n - 9) {
+  border-left: none;
+}
+
+.gameboardCell:not(.ship):nth-child(10n) {
+  border-right: none;
+}
+
+.gameboardCell:not(.ship):nth-child(n + 91) {
+  border-bottom: none;
+}
+
+.gameboardCell:not(.ship):nth-child(-n + 10) {
+  border-top: none;
+}

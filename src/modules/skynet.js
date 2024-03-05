@@ -12,7 +12,7 @@ class Skynet extends Player {
 
   attack(gameboard) {
     // Make sure there is no infinite recursion if the board is already full of attacks
-    if (!gameboard.anySpacesLeftToAttack) return;
+    if (!gameboard.anySpacesLeftToAttack()) return;
     const x = rangedRandomInt(
       gameboard.minBoardPosition,
       gameboard.maxBoardPosition,
