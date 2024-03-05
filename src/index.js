@@ -56,15 +56,10 @@ revealShips(playerGameboard, playerGameboardDOM);
 const enemyGameboardDOM = createGameboard(enemyGameboard);
 wrapper.appendChild(enemyGameboardDOM);
 
-function enemyAttackPlayer() {
-  setTimeout(
-    () => {
-      const attackPlayer = enemy.attack.bind(enemy);
-      attackPlayer(playerGameboard);
-      canAttack = true;
-    },
-    rangedRandomInt(400, 1000),
-  );
+function randomDelay(minDelayInMillis, maxDelayInMillis) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, rangedRandomInt(minDelayInMillis, maxDelayInMillis));
+  });
 }
 
 function checkWon() {
@@ -79,11 +74,13 @@ function checkWon() {
   }
 }
 
-Pubsub.subscribe('onCellClick', (gameboardDOM, x, y) => {
-  if (canAttack && gameboardDOM === enemyGameboardDOM) {
+Pubsub.subscribe('onCellClick', async (gameboardDOM, x, y) => {
+  if (!gameOver && canAttack && gameboardDOM === enemyGameboardDOM) {
     canAttack = false;
     player.attack(enemyGameboard, x, y);
-    enemyAttackPlayer();
+    await randomDelay(400, 1000);
+    enemy.attack(playerGameboard);
+    canAttack = true;
   }
 });
 
