@@ -26,11 +26,15 @@ export function revealShips(gameboard, gameboardElement) {
   const gameboardSize = gameboard.boardSize;
   for (let x = 0; x < gameboardSize; x += 1) {
     for (let y = 0; y < gameboardSize; y += 1) {
-      if (gameboard.boardCells[x][y]) {
+      const ship = gameboard.boardCells[x][y];
+      if (ship) {
         const cellElement = gameboardElement.querySelector(
           `.gameboardCell[data-x="${x}"][data-y="${y}"]`,
         );
         cellElement.classList.add('ship');
+        cellElement.classList.add(
+          ship.isHorizontal ? 'horizontal-ship' : 'vertical-ship',
+        );
       }
     }
   }
