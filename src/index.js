@@ -8,8 +8,6 @@ const Pubsub = require('./modules/pubsub');
 const Gameboard = require('./modules/gameboard');
 const Player = require('./modules/player');
 const Skynet = require('./modules/skynet');
-const Ship = require('./modules/ship');
-const rangedRandomInt = require('./modules/rangedRandomInt');
 const randomDelay = require('./modules/randomDelay');
 
 let canAttack = true;
@@ -22,29 +20,8 @@ const player = new Player('Bob', gameboardSize);
 const enemyGameboard = new Gameboard(gameboardSize);
 const enemy = new Skynet('Kate', gameboardSize);
 
-function randomlyPlaceShips(gameboard, shipCount) {
-  while (gameboard.shipCount() < shipCount) {
-    const newShip = new Ship(
-      'Random Ship',
-      rangedRandomInt(3, 5),
-      rangedRandomInt(0, 1),
-    );
-    try {
-      gameboard.place(
-        newShip,
-        rangedRandomInt(gameboard.minBoardPosition, gameboard.maxBoardPosition),
-        rangedRandomInt(gameboard.minBoardPosition, gameboard.maxBoardPosition),
-      );
-    } catch (error) {
-      console.log(
-        'Tried to place a ship where one already exists. Keep trying...',
-      );
-    }
-  }
-}
-
-randomlyPlaceShips(playerGameboard, 5);
-randomlyPlaceShips(enemyGameboard, 5);
+player.randomlyPlaceShips(playerGameboard);
+enemy.randomlyPlaceShips(enemyGameboard);
 
 const wrapper = document.createElement('div');
 wrapper.classList.add('wrapper');
