@@ -60,21 +60,11 @@ function enemyAttackPlayer() {
     () => {
       const attackPlayer = enemy.attack.bind(enemy);
       attackPlayer(playerGameboard);
-      revealShips(playerGameboard, playerGameboardDOM);
       canAttack = true;
     },
     rangedRandomInt(400, 1000),
   );
 }
-
-// All this binding stuff is terrible...
-Pubsub.subscribe('onCellClick', (gameboardDOM, x, y) => {
-  if (canAttack && gameboardDOM === enemyGameboardDOM) {
-    canAttack = false;
-    player.attack(enemyGameboard, x, y);
-    enemyAttackPlayer();
-  }
-});
 
 function checkWon() {
   if (playerGameboard.areShipsAllSunk()) {
@@ -86,9 +76,18 @@ function checkWon() {
   }
 }
 
+Pubsub.subscribe('onCellClick', (gameboardDOM, x, y) => {
+  if (canAttack && gameboardDOM === enemyGameboardDOM) {
+    canAttack = false;
+    player.attack(enemyGameboard, x, y);
+    enemyAttackPlayer();
+  }
+});
+
 Pubsub.subscribe('onBoardChange', (gameboard) => {
   if (gameboard === playerGameboard) {
     updateGameboard(gameboard, playerGameboardDOM);
+    revealShips(playerGameboard, playerGameboardDOM);
   } else if (gameboard === enemyGameboard) {
     updateGameboard(gameboard, enemyGameboardDOM);
   }
