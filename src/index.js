@@ -12,6 +12,7 @@ const rangedRandomInt = require('./modules/rangedRandomInt');
 const Pubsub = require('./modules/pubsub');
 
 let canAttack = true;
+let gameOver = false;
 
 const gameboardSize = 10;
 const playerGameboard = new Gameboard(gameboardSize);
@@ -69,8 +70,10 @@ function enemyAttackPlayer() {
 function checkWon() {
   if (playerGameboard.areShipsAllSunk()) {
     alert('Skynet wins!');
+    gameOver = true;
   } else if (enemyGameboard.areShipsAllSunk()) {
     alert('You win!');
+    gameOver = true;
   } else {
     console.log(`${enemyGameboard.shipsLeft()} ships left to sink...`);
   }
@@ -91,5 +94,5 @@ Pubsub.subscribe('onBoardChange', (gameboard) => {
   } else if (gameboard === enemyGameboard) {
     updateGameboard(gameboard, enemyGameboardDOM);
   }
-  checkWon();
+  if (!gameOver) checkWon();
 });
