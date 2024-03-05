@@ -10,6 +10,7 @@ const Skynet = require('./modules/skynet');
 const Ship = require('./modules/ship');
 const rangedRandomInt = require('./modules/rangedRandomInt');
 const Pubsub = require('./modules/pubsub');
+const randomDelay = require('./modules/randomDelay');
 
 let canAttack = true;
 let gameOver = false;
@@ -55,12 +56,6 @@ revealShips(playerGameboard, playerGameboardDOM);
 
 const enemyGameboardDOM = createGameboard(enemyGameboard);
 wrapper.appendChild(enemyGameboardDOM);
-
-function randomDelay(minDelayInMillis, maxDelayInMillis) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, rangedRandomInt(minDelayInMillis, maxDelayInMillis));
-  });
-}
 
 function checkWon() {
   if (playerGameboard.areShipsAllSunk()) {
