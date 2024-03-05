@@ -58,11 +58,15 @@ export function revealShips(gameboard, gameboardElement) {
   }
 }
 
-export function updateGameboard(gameboard, gameboardElement) {
+export function updateGameboard(gameboard, gameboardDOM) {
+  const { gameboardElement, statusElement } = gameboardDOM;
   const allCells = gameboardElement.querySelectorAll('.gameboardCell');
   allCells.forEach((cell) => {
     cell.remove();
   });
+  if (gameboard.shipsLeft())
+    statusElement.innerText = `${gameboard.shipsLeft()} ships left`;
+  else statusElement.innerText = 'All ships destroyed!';
   createGameboardCells(gameboard, gameboardElement);
 }
 
@@ -70,15 +74,15 @@ export default function createGameboard(gameboard) {
   const wrapper = document.createElement('div');
   wrapper.classList.add('gameboard-wrapper');
 
-  const status = document.createElement('div');
-  status.classList.add('gameboard-status');
-  status.innerText = '5 Ships Left';
-  wrapper.appendChild(status);
+  const statusElement = document.createElement('div');
+  statusElement.classList.add('gameboard-status');
+  statusElement.innerText = '5 ships left';
+  wrapper.appendChild(statusElement);
 
   const gameboardElement = document.createElement('div');
   wrapper.appendChild(gameboardElement);
 
   gameboardElement.classList.add('gameboard');
   createGameboardCells(gameboard, gameboardElement);
-  return { wrapper, gameboardElement };
+  return { wrapper, statusElement, gameboardElement };
 }

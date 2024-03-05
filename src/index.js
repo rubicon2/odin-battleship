@@ -60,10 +60,10 @@ Pubsub.subscribe('onCellClick', async (gameboardDOM, x, y) => {
 
 Pubsub.subscribe('onBoardChange', (gameboard) => {
   if (gameboard === playerGameboard) {
-    updateGameboard(gameboard, playerGameboardElement);
+    updateGameboard(gameboard, playerGameboardDOM);
     revealShips(playerGameboard, playerGameboardElement);
   } else if (gameboard === enemyGameboard) {
-    updateGameboard(gameboard, enemyGameboardElement);
+    updateGameboard(gameboard, enemyGameboardDOM);
   }
   if (!gameOver) checkWon();
 });
