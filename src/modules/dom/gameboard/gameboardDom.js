@@ -38,6 +38,24 @@ export function revealShips(gameboard, gameboardElement) {
       }
     }
   }
+  // Add heads and tails to the ships
+  for (let i = 0; i < gameboard.ships.length; i += 1) {
+    const { ship, startX, startY, endX, endY } = gameboard.ships[i];
+    const headElement = gameboardElement.querySelector(
+      `.gameboardCell[data-x="${startX}"][data-y="${startY}"]`,
+    );
+    headElement.classList.add(
+      ship.isHorizontal ? 'horizontal-ship-head' : 'vertical-ship-head',
+    );
+    const tailElement = gameboardElement.querySelector(
+      `.gameboardCell[data-x="${endX}"][data-y="${endY}"]`,
+    );
+    if (ship.isHorizontal) tailElement.classList.add('horizontal-ship-tail');
+    else tailElement.classList.add('vertical-ship-tail');
+    tailElement.classList.add(
+      ship.isHorizontal ? 'horizontal-ship-tail' : 'vertical-ship-tail',
+    );
+  }
 }
 
 export function updateGameboard(gameboard, gameboardElement) {

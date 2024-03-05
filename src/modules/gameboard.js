@@ -44,6 +44,10 @@ class Gameboard {
     return this.#receivedAttackCells.flat().filter((cell) => cell !== null);
   }
 
+  get ships() {
+    return this.#ships;
+  }
+
   anySpacesLeftToAttack() {
     return this.receivedAttacks.length < this.boardSize ** 2;
   }
@@ -89,7 +93,16 @@ class Gameboard {
           this.#boardCells[currentX][y] = ship;
         }
       }
-      this.#ships.push(ship);
+      // Make a record of start and end positions so we can use this to style front and end of ship later
+      const endX = ship.isHorizontal ? x : x + ship.length - 1;
+      const endY = ship.isHorizontal ? y + ship.length - 1 : y;
+      this.#ships.push({
+        startX: x,
+        startY: y,
+        endX,
+        endY,
+        ship,
+      });
       Pubsub.publish('onBoardChange', this);
     } else {
       throw new Error(`Space is not available! x: ${x}, y: ${y}`);
@@ -126,14 +139,14 @@ class Gameboard {
 
   shipsLeft() {
     return this.#ships.reduce(
-      (count, ship) => count + parseInt(ship.isSunk() ? 0 : 1, 10),
+      (count, ship) => count + parseInt(ship.ship.isSunk() ? 0 : 1, 10),
       0,
     );
   }
 
   areShipsAllSunk() {
     // eslint-disable-next-line no-restricted-syntax
-    for (const ship of this.#ships) if (!ship.isSunk()) return false;
+    for (const ship of this.#ships) if (!ship.ship.isSunk()) return false;
     return true;
   }
 }
