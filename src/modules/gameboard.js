@@ -9,7 +9,7 @@ class Gameboard {
   #receivedAttackCells = null;
 
   // Keep refs to each ship as they are placed, so can easily update their state
-  #ships = [];
+  #shipLog = [];
 
   constructor(boardSize = 10) {
     this.boardSize = boardSize;
@@ -20,7 +20,7 @@ class Gameboard {
   reset() {
     this.#boardCells = array2D(this.boardSize);
     this.#receivedAttackCells = array2D(this.boardSize);
-    this.#ships = [];
+    this.#shipLog = [];
     Pubsub.publish('onBoardChange', this);
   }
 
@@ -45,7 +45,7 @@ class Gameboard {
   }
 
   get ships() {
-    return this.#ships;
+    return this.#shipLog;
   }
 
   anySpacesLeftToAttack() {
@@ -96,7 +96,7 @@ class Gameboard {
       // Make a record of start and end positions so we can use this to style front and end of ship later
       const endX = ship.isHorizontal ? x : x + ship.length - 1;
       const endY = ship.isHorizontal ? y + ship.length - 1 : y;
-      this.#ships.push({
+      this.#shipLog.push({
         startX: x,
         startY: y,
         endX,
@@ -134,19 +134,21 @@ class Gameboard {
   }
 
   shipCount() {
-    return this.#ships.length;
+    return this.#shipLog.length;
   }
 
   shipsLeft() {
-    return this.#ships.reduce(
-      (count, ship) => count + parseInt(ship.ship.isSunk() ? 0 : 1, 10),
+    return this.#shipLog.reduce(
+      (count, shipLogEntry) =>
+        count + parseInt(shipLogEntry.ship.isSunk() ? 0 : 1, 10),
       0,
     );
   }
 
   areShipsAllSunk() {
     // eslint-disable-next-line no-restricted-syntax
-    for (const ship of this.#ships) if (!ship.ship.isSunk()) return false;
+    for (const shipLogEntry of this.#shipLog)
+      if (!shipLogEntry.ship.isSunk()) return false;
     return true;
   }
 }
