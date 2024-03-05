@@ -1,15 +1,15 @@
+import './style.css';
 import createGameboard, {
   updateGameboard,
   revealShips,
 } from './modules/dom/gameboard/gameboardDom';
-import './style.css';
 
+const Pubsub = require('./modules/pubsub');
 const Gameboard = require('./modules/gameboard');
 const Player = require('./modules/player');
 const Skynet = require('./modules/skynet');
 const Ship = require('./modules/ship');
 const rangedRandomInt = require('./modules/rangedRandomInt');
-const Pubsub = require('./modules/pubsub');
 const randomDelay = require('./modules/randomDelay');
 
 let canAttack = true;
