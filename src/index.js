@@ -28,11 +28,13 @@ wrapper.classList.add('wrapper');
 document.body.appendChild(wrapper);
 
 const playerGameboardDOM = createGameboard(playerGameboard);
-wrapper.appendChild(playerGameboardDOM);
-revealShips(playerGameboard, playerGameboardDOM);
+const playerGameboardElement = playerGameboardDOM.gameboardElement;
+wrapper.appendChild(playerGameboardDOM.wrapper);
+revealShips(playerGameboard, playerGameboardElement);
 
 const enemyGameboardDOM = createGameboard(enemyGameboard);
-wrapper.appendChild(enemyGameboardDOM);
+const enemyGameboardElement = enemyGameboardDOM.gameboardElement;
+wrapper.appendChild(enemyGameboardDOM.wrapper);
 
 function checkWon() {
   if (playerGameboard.areShipsAllSunk()) {
@@ -47,7 +49,7 @@ function checkWon() {
 }
 
 Pubsub.subscribe('onCellClick', async (gameboardDOM, x, y) => {
-  if (!gameOver && canAttack && gameboardDOM === enemyGameboardDOM) {
+  if (!gameOver && canAttack && gameboardDOM === enemyGameboardElement) {
     canAttack = false;
     player.attack(enemyGameboard, x, y);
     await randomDelay(400, 1000);
@@ -58,10 +60,10 @@ Pubsub.subscribe('onCellClick', async (gameboardDOM, x, y) => {
 
 Pubsub.subscribe('onBoardChange', (gameboard) => {
   if (gameboard === playerGameboard) {
-    updateGameboard(gameboard, playerGameboardDOM);
-    revealShips(playerGameboard, playerGameboardDOM);
+    updateGameboard(gameboard, playerGameboardElement);
+    revealShips(playerGameboard, playerGameboardElement);
   } else if (gameboard === enemyGameboard) {
-    updateGameboard(gameboard, enemyGameboardDOM);
+    updateGameboard(gameboard, enemyGameboardElement);
   }
   if (!gameOver) checkWon();
 });

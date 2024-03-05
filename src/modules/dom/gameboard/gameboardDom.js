@@ -49,8 +49,18 @@ export function updateGameboard(gameboard, gameboardElement) {
 }
 
 export default function createGameboard(gameboard) {
+  const wrapper = document.createElement('div');
+  wrapper.classList.add('gameboard-wrapper');
+
+  const status = document.createElement('div');
+  status.classList.add('gameboard-status');
+  status.innerText = '5 Ships Left';
+  wrapper.appendChild(status);
+
   const gameboardElement = document.createElement('div');
+  wrapper.appendChild(gameboardElement);
+
   gameboardElement.classList.add('gameboard');
   createGameboardCells(gameboard, gameboardElement);
-  return gameboardElement;
+  return { wrapper, gameboardElement };
 }
