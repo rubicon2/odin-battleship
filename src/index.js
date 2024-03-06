@@ -3,6 +3,8 @@ import createGameboard, {
   updateGameboard,
   revealShips,
 } from './modules/dom/gameboard/gameboardDom';
+import { delay, fade } from './modules/domFade';
+import rangedRandomInt from './modules/rangedRandomInt';
 
 const Pubsub = require('./modules/pubsub');
 const Gameboard = require('./modules/gameboard');
@@ -60,7 +62,7 @@ async function handleGameboardCellClick(gameboardDOM, x, y) {
   if (!gameOver && canAttack && gameboardDOM === enemyGameboardElement) {
     canAttack = false;
     player.attack(enemyGameboard, x, y);
-    // await randomDelay(400, 1000);
+    await delay(rangedRandomInt(400, 1000));
     enemy.attack(playerGameboard);
     canAttack = true;
   }
@@ -101,7 +103,7 @@ async function handleShipCreateCellClick(gameboardDOM, x, y) {
         case 4:
           playerGameboard.place(new Ship('Destroyer', 2), x, y);
           updateStatus(playerGameboardDOM, 'All ships placed!');
-          await new Promise((resolve) => setTimeout(resolve, 2000));
+          await delay(2000);
           updateStatus(
             playerGameboardDOM,
             'Click on the enemy grid to attack!',
