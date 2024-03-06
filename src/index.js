@@ -166,4 +166,3 @@ Pubsub.subscribe('onBoardChange', (gameboard) => {
 });
 
 resetGame();
-gameWon();
