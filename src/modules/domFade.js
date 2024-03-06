@@ -13,9 +13,12 @@ function fade(element, fadeSeconds, targetOpacity) {
     }
 
     /* eslint-disable-next-line eqeqeq -- comparing css properties won't work otherwise */
-    if (element.style.opacity != targetOpacity) {
+    if ((element.style.opacity || 0) != targetOpacity) {
       element.style.transition = `opacity ${fadeSeconds}s`;
-      element.style.opacity = targetOpacity;
+      // Add timeout 0 otherwise transition doesn't happen propery
+      setTimeout(() => {
+        element.style.opacity = targetOpacity;
+      }, 0);
       element.addEventListener('transitionend', onTransitionEnd);
     } else {
       resolve();
