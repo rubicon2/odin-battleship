@@ -43,12 +43,12 @@ gameOverDom.playAgainButton.addEventListener('click', () => {
 });
 
 function gameLost() {
-  gameOverDom.overlayInfoText.innerText = 'YOU LOST LIKE A WINNER!';
+  gameOverDom.overlayInfoText.innerText = 'You lost!';
   gameOverDom.overlay.classList.remove('invisible');
 }
 
 function gameWon() {
-  gameOverDom.overlayInfoText.innerText = 'YOU WON LIKE A LOSER!';
+  gameOverDom.overlayInfoText.innerText = 'You won!';
   gameOverDom.overlay.classList.remove('invisible');
 }
 
@@ -166,3 +166,4 @@ Pubsub.subscribe('onBoardChange', (gameboard) => {
 });
 
 resetGame();
+gameWon();
