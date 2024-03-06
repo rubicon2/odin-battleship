@@ -6,10 +6,4 @@
   height: 100vh;
 
   background-color: rgba(0, 0, 0, 0.705);
-  transition: opacity 1s;
-}
-
-.invisible {
-  opacity: 0;
-  z-index: -1;
 }

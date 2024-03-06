@@ -35,24 +35,24 @@ const enemyGameboardDOM = createGameboard(enemyGameboard);
 const enemyGameboardElement = enemyGameboardDOM.gameboardElement;
 wrapper.appendChild(enemyGameboardDOM.wrapper);
 
+async function hideOverlay() {
+  await fade(gameOverDom.overlay, 1, 0);
+  gameOverDom.overlay.style.display = 'none';
+}
+
+async function showOverlay() {
+  gameOverDom.overlay.style.display = 'grid';
+  await fade(gameOverDom.overlay, 1, 1);
+}
+
 const gameOverDom = createGameOverOverlay();
+gameOverDom.overlay.style.opacity = 0;
+hideOverlay();
 document.body.appendChild(gameOverDom.overlay);
-gameOverDom.playAgainButton.addEventListener('click', () => {
+gameOverDom.playAgainButton.addEventListener('click', async () => {
+  await hideOverlay();
   resetGame();
-  gameOverDom.overlay.classList.add('invisible');
-  // Need to fade out and then remove overlay so it does not get in the way of clicking the cells!
-  // At the moment set z-index to some random value to keep it out of the way, but looks weird when fading out...
 });
-
-function gameLost() {
-  gameOverDom.overlayInfoText.innerText = 'You lost!';
-  gameOverDom.overlay.classList.remove('invisible');
-}
-
-function gameWon() {
-  gameOverDom.overlayInfoText.innerText = 'You won!';
-  gameOverDom.overlay.classList.remove('invisible');
-}
 
 function updateStatus(gameboardDOM, message) {
   gameboardDOM.statusElement.innerText = message;
@@ -147,13 +147,13 @@ function startGame() {
 
 function checkWon() {
   if (playerGameboard.areShipsAllSunk()) {
-    gameLost();
     gameOver = true;
+    gameOverDom.overlayInfoText.innerText = 'You lost!';
+    showOverlay();
   } else if (enemyGameboard.areShipsAllSunk()) {
-    gameWon();
     gameOver = true;
-  } else {
-    console.log(`${enemyGameboard.shipsLeft()} ships left to sink...`);
+    gameOverDom.overlayInfoText.innerText = 'You won!';
+    showOverlay();
   }
 }
 
