@@ -12,6 +12,7 @@ const Ship = require('./modules/ship');
 const Player = require('./modules/player');
 const Skynet = require('./modules/skynet');
 const createGameOverOverlay = require('./modules/dom/gameOver/gameoverDom');
+const createSwitchShipOrientationButton = require('./modules/dom/switchShipOrientationButton/switchShipOrientationButtonDom');
 
 let canAttack = true;
 let gameOver = true;
@@ -29,6 +30,9 @@ document.body.appendChild(wrapper);
 
 const playerGameboardDOM = createGameboard(playerGameboard);
 const playerGameboardElement = playerGameboardDOM.gameboardElement;
+const switchShipOrientation = createSwitchShipOrientationButton();
+switchShipOrientation.addEventListener('click', () => {});
+playerGameboardDOM.statusBarElement.appendChild(switchShipOrientation);
 wrapper.appendChild(playerGameboardDOM.wrapper);
 
 const enemyGameboardDOM = createGameboard(enemyGameboard);
@@ -55,7 +59,7 @@ gameOverDom.playAgainButton.addEventListener('click', async () => {
 });
 
 function updateStatus(gameboardDOM, message) {
-  gameboardDOM.statusElement.innerText = message;
+  gameboardDOM.statusMessage.innerText = message;
 }
 
 function checkWon() {
@@ -84,47 +88,70 @@ async function handleGameboardCellClick(gameboardDOM, x, y) {
   }
 }
 
+let placeHorizontalShips = true;
+
 async function handleShipCreateCellClick(gameboardDOM, x, y) {
   if (gameboardDOM === playerGameboardElement) {
     try {
       const existingShip = playerGameboard.get(x, y);
       if (existingShip) {
         playerGameboard.removeShip(x, y);
-        existingShip.isHorizontal = !existingShip.isHorizontal;
+        placeHorizontalShips = !placeHorizontalShips;
+        existingShip.isHorizontal = placeHorizontalShips;
         playerGameboard.place(existingShip, x, y);
         return;
       }
       switch (playerGameboard.shipCount()) {
         case 0:
-          playerGameboard.place(new Ship('Carrier', 5), x, y);
+          playerGameboard.place(
+            new Ship('Carrier', 5, placeHorizontalShips),
+            x,
+            y,
+          );
           updateStatus(
             playerGameboardDOM,
             'Click to place a Battleship (length: 4)',
           );
           break;
         case 1:
-          playerGameboard.place(new Ship('Battleship', 4), x, y);
+          playerGameboard.place(
+            new Ship('Battleship', 4, placeHorizontalShips),
+            x,
+            y,
+          );
           updateStatus(
             playerGameboardDOM,
             'Click to place a Cruiser (length: 3)',
           );
           break;
         case 2:
-          playerGameboard.place(new Ship('Cruiser', 3), x, y);
+          playerGameboard.place(
+            new Ship('Cruiser', 3, placeHorizontalShips),
+            x,
+            y,
+          );
           updateStatus(
             playerGameboardDOM,
             'Click to place a Submarine (length: 3)',
           );
           break;
         case 3:
-          playerGameboard.place(new Ship('Submarine', 3), x, y);
+          playerGameboard.place(
+            new Ship('Submarine', 3, placeHorizontalShips),
+            x,
+            y,
+          );
           updateStatus(
             playerGameboardDOM,
             'Click to place a Destroyer (length: 2)',
           );
           break;
         case 4:
-          playerGameboard.place(new Ship('Destroyer', 2), x, y);
+          playerGameboard.place(
+            new Ship('Destroyer', 2, placeHorizontalShips),
+            x,
+            y,
+          );
           updateStatus(playerGameboardDOM, 'All ships placed!');
           await delay(2000);
           updateStatus(
@@ -156,7 +183,7 @@ function updateShipsLeftStatus(gameboard) {
   if (gameboard === playerGameboard) gameboardDOM = playerGameboardDOM;
   else if (gameboard === enemyGameboard) gameboardDOM = enemyGameboardDOM;
 
-  gameboardDOM.statusElement.innerText = gameboard.shipsLeft()
+  gameboardDOM.statusMessage.innerText = gameboard.shipsLeft()
     ? `${gameboard.shipsLeft()} ships left`
     : `All ships destroyed!`;
 }

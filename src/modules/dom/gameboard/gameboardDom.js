@@ -71,15 +71,24 @@ export default function createGameboard(gameboard) {
   const wrapper = document.createElement('div');
   wrapper.classList.add('gameboard-wrapper');
 
-  const statusElement = document.createElement('div');
-  statusElement.classList.add('gameboard-status');
-  statusElement.innerText = 'Status Message';
-  wrapper.appendChild(statusElement);
+  const statusBarElement = document.createElement('div');
+  statusBarElement.classList.add('gameboard-status-bar');
+  wrapper.appendChild(statusBarElement);
+
+  const statusMessage = document.createElement('div');
+  statusMessage.classList.add('gameboard-status-message');
+  statusMessage.innerText = 'Status Message';
+  statusBarElement.appendChild(statusMessage);
 
   const gameboardElement = document.createElement('div');
   wrapper.appendChild(gameboardElement);
 
   gameboardElement.classList.add('gameboard');
   createGameboardCells(gameboard, gameboardElement);
-  return { wrapper, statusElement, gameboardElement };
+  return {
+    wrapper,
+    statusBarElement,
+    statusMessage,
+    gameboardElement,
+  };
 }

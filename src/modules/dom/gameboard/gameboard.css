@@ -12,7 +12,12 @@
   grid-template: repeat(10, 1fr) / repeat(10, 1fr);
 }
 
-.gameboard-status {
+.gameboard-status-bar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.gameboard-status-message {
   font-size: 2.5rem;
   font-style: italic;
   font-weight: bold;
