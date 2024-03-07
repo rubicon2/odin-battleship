@@ -113,6 +113,34 @@ class Gameboard {
     return this.#boardCells[x][y];
   }
 
+  removeShip(x, y) {
+    const ship = this.get(x, y);
+    const { startX, startY } = this.#shipLog.filter(
+      (entry) => entry.ship === ship,
+    )[0];
+    // Remove from ship log
+    this.#shipLog = this.#shipLog.filter((entry) => entry.ship !== ship);
+    // Remove from board
+    if (ship.isHorizontal) {
+      for (
+        let currentY = startY;
+        currentY < startY + ship.length;
+        currentY += 1
+      ) {
+        this.#boardCells[x][currentY] = null;
+      }
+    } else {
+      for (
+        let currentX = startX;
+        currentX < startX + ship.length;
+        currentX += 1
+      ) {
+        this.#boardCells[currentX][y] = null;
+      }
+    }
+    Pubsub.publish('onBoardChange', this);
+  }
+
   checkSpaceAttacked(x, y) {
     if (this.#receivedAttackCells[x][y] !== null) return true;
     return false;

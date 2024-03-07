@@ -87,6 +87,13 @@ async function handleGameboardCellClick(gameboardDOM, x, y) {
 async function handleShipCreateCellClick(gameboardDOM, x, y) {
   if (gameboardDOM === playerGameboardElement) {
     try {
+      const existingShip = playerGameboard.get(x, y);
+      if (existingShip) {
+        playerGameboard.removeShip(x, y);
+        existingShip.isHorizontal = !existingShip.isHorizontal;
+        playerGameboard.place(existingShip, x, y);
+        return;
+      }
       switch (playerGameboard.shipCount()) {
         case 0:
           playerGameboard.place(new Ship('Carrier', 5), x, y);
