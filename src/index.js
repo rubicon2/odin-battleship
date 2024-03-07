@@ -58,13 +58,29 @@ function updateStatus(gameboardDOM, message) {
   gameboardDOM.statusElement.innerText = message;
 }
 
+function checkWon() {
+  if (playerGameboard.areShipsAllSunk()) {
+    gameOver = true;
+    gameOverDom.overlayInfoText.innerText = 'You lost!';
+    showOverlay();
+  } else if (enemyGameboard.areShipsAllSunk()) {
+    gameOver = true;
+    gameOverDom.overlayInfoText.innerText = 'You won!';
+    showOverlay();
+  }
+}
+
 async function handleGameboardCellClick(gameboardDOM, x, y) {
   if (!gameOver && canAttack && gameboardDOM === enemyGameboardElement) {
     canAttack = false;
     player.attack(enemyGameboard, x, y);
-    await delay(rangedRandomInt(400, 1000));
-    enemy.attack(playerGameboard);
-    canAttack = true;
+    checkWon();
+    if (!gameOver) {
+      await delay(rangedRandomInt(400, 1000));
+      enemy.attack(playerGameboard);
+      checkWon();
+      canAttack = true;
+    }
   }
 }
 
@@ -144,18 +160,7 @@ function startGame() {
   Pubsub.subscribe('onBoardChange', updateShipsLeftStatus);
   enemy.randomlyPlaceShips(enemyGameboard);
   gameOver = false;
-}
-
-function checkWon() {
-  if (playerGameboard.areShipsAllSunk()) {
-    gameOver = true;
-    gameOverDom.overlayInfoText.innerText = 'You lost!';
-    showOverlay();
-  } else if (enemyGameboard.areShipsAllSunk()) {
-    gameOver = true;
-    gameOverDom.overlayInfoText.innerText = 'You won!';
-    showOverlay();
-  }
+  canAttack = true;
 }
 
 Pubsub.subscribe('onBoardChange', (gameboard) => {
@@ -165,7 +170,6 @@ Pubsub.subscribe('onBoardChange', (gameboard) => {
   } else if (gameboard === enemyGameboard) {
     updateGameboard(gameboard, enemyGameboardDOM);
   }
-  if (!gameOver) checkWon();
 });
 
 resetGame();
