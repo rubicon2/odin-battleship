@@ -122,6 +122,7 @@ async function handleShipCreateCellClick(gameboardDOM, x, y) {
 function resetGame() {
   playerGameboard.reset();
   enemyGameboard.reset();
+  enemy.resetAttackList(playerGameboard.boardSize);
   Pubsub.subscribe('onCellClick', handleShipCreateCellClick);
   updateStatus(playerGameboardDOM, 'Click to place a Carrier (length: 5)');
   updateStatus(enemyGameboardDOM, '5 ships left');
