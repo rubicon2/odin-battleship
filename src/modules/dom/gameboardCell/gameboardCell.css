@@ -1,5 +1,6 @@
 .gameboardCell:not(.ship) {
   border: 1px solid rgb(71, 148, 184);
+  cursor: pointer;
 }
 
 .ship {

@@ -65,16 +65,16 @@ class Gameboard {
     if (ship.isHorizontal) {
       for (let currentY = y; currentY < y + ship.length; currentY += 1) {
         if (
-          this.#boardCells[x][currentY] ||
-          !this.checkPositionValid(x, currentY)
+          !this.checkPositionValid(x, currentY) ||
+          this.#boardCells[x][currentY]
         )
           return false;
       }
     } else {
       for (let currentX = x; currentX < x + ship.length; currentX += 1) {
         if (
-          this.#boardCells[currentX][y] ||
-          !this.checkPositionValid(currentX, y)
+          !this.checkPositionValid(currentX, y) ||
+          this.#boardCells[currentX][y]
         )
           return false;
       }
@@ -111,6 +111,34 @@ class Gameboard {
 
   get(x, y) {
     return this.#boardCells[x][y];
+  }
+
+  removeShip(x, y) {
+    const ship = this.get(x, y);
+    const { startX, startY } = this.#shipLog.filter(
+      (entry) => entry.ship === ship,
+    )[0];
+    // Remove from ship log
+    this.#shipLog = this.#shipLog.filter((entry) => entry.ship !== ship);
+    // Remove from board
+    if (ship.isHorizontal) {
+      for (
+        let currentY = startY;
+        currentY < startY + ship.length;
+        currentY += 1
+      ) {
+        this.#boardCells[x][currentY] = null;
+      }
+    } else {
+      for (
+        let currentX = startX;
+        currentX < startX + ship.length;
+        currentX += 1
+      ) {
+        this.#boardCells[currentX][y] = null;
+      }
+    }
+    Pubsub.publish('onBoardChange', this);
   }
 
   checkSpaceAttacked(x, y) {
