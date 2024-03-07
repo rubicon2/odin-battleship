@@ -1,10 +1,19 @@
+.gameboard-wrapper {
+  width: 80vh;
+}
+
 .gameboard {
   background-color: rgb(54, 115, 172);
-  width: 80vh;
   height: 80vh;
 
   border: 5px solid black;
 
   display: grid;
   grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+}
+
+.gameboard-status {
+  font-size: 2.5rem;
+  font-style: italic;
+  font-weight: bold;
 }

@@ -38,9 +38,28 @@ export function revealShips(gameboard, gameboardElement) {
       }
     }
   }
+  // Add heads and tails to the ships
+  for (let i = 0; i < gameboard.ships.length; i += 1) {
+    const { ship, startX, startY, endX, endY } = gameboard.ships[i];
+    const headElement = gameboardElement.querySelector(
+      `.gameboardCell[data-x="${startX}"][data-y="${startY}"]`,
+    );
+    headElement.classList.add(
+      ship.isHorizontal ? 'horizontal-ship-head' : 'vertical-ship-head',
+    );
+    const tailElement = gameboardElement.querySelector(
+      `.gameboardCell[data-x="${endX}"][data-y="${endY}"]`,
+    );
+    if (ship.isHorizontal) tailElement.classList.add('horizontal-ship-tail');
+    else tailElement.classList.add('vertical-ship-tail');
+    tailElement.classList.add(
+      ship.isHorizontal ? 'horizontal-ship-tail' : 'vertical-ship-tail',
+    );
+  }
 }
 
-export function updateGameboard(gameboard, gameboardElement) {
+export function updateGameboard(gameboard, gameboardDOM) {
+  const { gameboardElement } = gameboardDOM;
   const allCells = gameboardElement.querySelectorAll('.gameboardCell');
   allCells.forEach((cell) => {
     cell.remove();
@@ -49,8 +68,18 @@ export function updateGameboard(gameboard, gameboardElement) {
 }
 
 export default function createGameboard(gameboard) {
+  const wrapper = document.createElement('div');
+  wrapper.classList.add('gameboard-wrapper');
+
+  const statusElement = document.createElement('div');
+  statusElement.classList.add('gameboard-status');
+  statusElement.innerText = 'Status Message';
+  wrapper.appendChild(statusElement);
+
   const gameboardElement = document.createElement('div');
+  wrapper.appendChild(gameboardElement);
+
   gameboardElement.classList.add('gameboard');
   createGameboardCells(gameboard, gameboardElement);
-  return gameboardElement;
+  return { wrapper, statusElement, gameboardElement };
 }

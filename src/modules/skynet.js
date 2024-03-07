@@ -7,6 +7,10 @@ class Skynet extends Player {
 
   constructor(name, gameboardSize) {
     super(name);
+    this.resetAttackList(gameboardSize);
+  }
+
+  resetAttackList(gameboardSize) {
     this.#attackList = array2D(gameboardSize);
   }
 
