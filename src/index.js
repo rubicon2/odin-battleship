@@ -12,10 +12,11 @@ const Ship = require('./modules/ship');
 const Player = require('./modules/player');
 const Skynet = require('./modules/skynet');
 const createGameOverOverlay = require('./modules/dom/gameOver/gameoverDom');
-const createSwitchShipOrientationButton = require('./modules/dom/switchShipOrientationButton/switchShipOrientationButtonDom');
+const SwitchShipOrientationButton = require('./modules/dom/switchShipOrientationButton/switchShipOrientationButtonDom');
 
 let canAttack = true;
 let gameOver = true;
+let placeHorizontalShips = true;
 
 const gameboardSize = 10;
 const playerGameboard = new Gameboard(gameboardSize);
@@ -30,8 +31,14 @@ document.body.appendChild(wrapper);
 
 const playerGameboardDOM = createGameboard(playerGameboard);
 const playerGameboardElement = playerGameboardDOM.gameboardElement;
-const switchShipOrientation = createSwitchShipOrientationButton();
-switchShipOrientation.addEventListener('click', () => {});
+const switchShipOrientation =
+  SwitchShipOrientationButton.createSwitchShipOrientationButton();
+switchShipOrientation.addEventListener('click', () => {
+  placeHorizontalShips = !placeHorizontalShips;
+  if (placeHorizontalShips)
+    switchShipOrientation.innerText = SwitchShipOrientationButton.rightArrow;
+  else switchShipOrientation.innerText = SwitchShipOrientationButton.downArrow;
+});
 playerGameboardDOM.statusBarElement.appendChild(switchShipOrientation);
 wrapper.appendChild(playerGameboardDOM.wrapper);
 
@@ -88,19 +95,9 @@ async function handleGameboardCellClick(gameboardDOM, x, y) {
   }
 }
 
-let placeHorizontalShips = true;
-
 async function handleShipCreateCellClick(gameboardDOM, x, y) {
   if (gameboardDOM === playerGameboardElement) {
     try {
-      const existingShip = playerGameboard.get(x, y);
-      if (existingShip) {
-        playerGameboard.removeShip(x, y);
-        placeHorizontalShips = !placeHorizontalShips;
-        existingShip.isHorizontal = placeHorizontalShips;
-        playerGameboard.place(existingShip, x, y);
-        return;
-      }
       switch (playerGameboard.shipCount()) {
         case 0:
           playerGameboard.place(
@@ -173,6 +170,7 @@ function resetGame() {
   playerGameboard.reset();
   enemyGameboard.reset();
   enemy.resetAttackList(playerGameboard.boardSize);
+  switchShipOrientation.style.visibility = 'visible';
   Pubsub.subscribe('onCellClick', handleShipCreateCellClick);
   updateStatus(playerGameboardDOM, 'Click to place a Carrier (length: 5)');
   updateStatus(enemyGameboardDOM, '5 ships left');
@@ -195,6 +193,7 @@ function startGame() {
   enemy.randomlyPlaceShips(enemyGameboard);
   gameOver = false;
   canAttack = true;
+  switchShipOrientation.style.visibility = 'hidden';
 }
 
 Pubsub.subscribe('onBoardChange', (gameboard) => {
