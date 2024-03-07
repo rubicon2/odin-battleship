@@ -65,16 +65,16 @@ class Gameboard {
     if (ship.isHorizontal) {
       for (let currentY = y; currentY < y + ship.length; currentY += 1) {
         if (
-          this.#boardCells[x][currentY] ||
-          !this.checkPositionValid(x, currentY)
+          !this.checkPositionValid(x, currentY) ||
+          this.#boardCells[x][currentY]
         )
           return false;
       }
     } else {
       for (let currentX = x; currentX < x + ship.length; currentX += 1) {
         if (
-          this.#boardCells[currentX][y] ||
-          !this.checkPositionValid(currentX, y)
+          !this.checkPositionValid(currentX, y) ||
+          this.#boardCells[currentX][y]
         )
           return false;
       }
